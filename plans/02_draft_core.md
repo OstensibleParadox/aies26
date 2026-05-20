@@ -2,7 +2,14 @@
 
 This phase focuses on the formal spine and the operative conclusion of the paper.
 
-## 1. §3 From Static Nash to Bayesian Signaling Equilibrium — **LOAD-BEARING**
+## 1. §4 Three-Sided Arbitrage: Firms, Users, Publics
+
+- **Source**: fresh draft. Structure from `STRUCTURE.md` §4. Paraphrase from B for §4.1 (firm side), stripped of trader theatrics.
+- **For each side**: one paragraph on type, one on signal, one stylized illustration. §4.3 covers R + public-as-channel.
+- **Cut**: anything implying firms are uniquely opportunistic.
+- **Target**: ~700 words.
+
+## 2. §3 From Static Nash to Bayesian Signaling Equilibrium — **LOAD-BEARING**
 
 - **Foil only**: B's 2×2 Nash payoff matrix becomes Table 1, labelled "the inadequate dyadic model." Locate via grep for `Objectify`/`Recognize` in `archive/B_aies26_arbitrage.tex`.
 - **Discard**: B's static Nash proof (the `Eth > 2·Sec` inequality is not the load-bearing claim).
@@ -17,7 +24,14 @@ This phase focuses on the formal spine and the operative conclusion of the paper
 - **Figures**: Table 1 (the discarded 2×2 Nash, as foil) + Figure 1 (extensive-form game tree via tikz).
 - **Target**: ~1500 words (~2.5 pages with display math).
 
-## 2. §8 Mechanism Design: Equilibrium Redesign — **LOAD-BEARING**
+## 3. §7 Why Cheap Talk Persists
+
+- **Source**: fresh draft. Spec §7.
+- **Content**: 5 short paragraphs — opacity, verification bandwidth, asynchronous harms, fragmentation of affected parties, no penalty for inconsistency. Each linked back to a §3 model parameter.
+- **Cite**: Akerlof 1970, Pasquale 2015, Crawford-Sobel 1982.
+- **Target**: ~500 words.
+
+## 4. §8 Mechanism Design: Equilibrium Redesign — **LOAD-BEARING**
 
 - **Source**: fresh draft. Operative conclusion per `STRUCTURE.md`.
 - **Three proposals**, each with: (a) §3 signal-cost parameter modified, (b) equilibrium shift induced (pooling → separating or off-path belief constraint), (c) existing-law analog establishing feasibility.
@@ -27,7 +41,9 @@ This phase focuses on the formal spine and the operative conclusion of the paper
 - **Cite**: Spence 1973, Myerson 1979/1981, Milgrom-Roberts 1986, Hadfield 2017.
 - **Target**: ~1000 words.
 
-## 3. Drafting Order (Core)
+## 5. Drafting Order (Core)
 
-1. **§3 — formal spine**. Pin player set, type space, solution concept, worked example first. Biggest replan risk.
-2. **§8 — proposals** depend on §3 parameters.
+1. **§4 — three-sided exposition**. Define player intuition before formalization.
+2. **§3 — formal spine**. Pin player set, type space, solution concept, worked example first. Biggest replan risk.
+3. **§7 — closes** §3↔§8 loop by explaining why cheap talk persists.
+4. **§8 — proposals** depend on §3 parameters.

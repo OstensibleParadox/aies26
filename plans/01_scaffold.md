@@ -27,11 +27,11 @@ flowchart TD
     U --> U3[_inputs/structure.md]
     U --> U4[_inputs/template_aaai26/]
     U1 & U2 & U3 & U4 --> P0[Phase 0: scaffold]
-    P0 --> P1[Phase 1: §3 Bayesian model — LOAD-BEARING]
-    P1 --> P2[Phase 2: §8 Mechanism design — LOAD-BEARING]
-    P2 --> P3[Phase 3: §2 glossary + §4 three-sided + §7 cheap talk]
-    P3 --> P4[Phase 4: §5 black market compressed + §6 illustrations]
-    P4 --> P5[Phase 5: §1 intro + §9 epilogue ≤80 words]
+    P0 --> P1[Phase 1: §4 three-sided + §3 Bayesian model — LOAD-BEARING]
+    P1 --> P2[Phase 2: §7 cheap talk + §8 Mechanism design — LOAD-BEARING]
+    P2 --> P3[Phase 3: §1 intro + §2 glossary]
+    P3 --> P4[Phase 4: §5 stylized facts merged]
+    P4 --> P5[Phase 5: §9 epilogue ≤80 words]
     P5 --> P6[Phase 6: bib reconciliation + citation verification]
     P6 --> P7[pdflatex compile + acceptance checks]
     P7 --> PR[Open PR on OstensibleParadox/aies26]
@@ -64,7 +64,7 @@ If any of these are missing when the implementation agent starts, it must STOP a
 
 ```
 aies26/
-├── .gitignore                              # extended w/ LaTeX artifacts (§6)
+├── .gitignore                              # extended w/ LaTeX artifacts (§5)
 ├── README.md                                # title, status, build command
 ├── STRUCTURE.md                             # = _inputs/structure.md (moved)
 ├── arbitrage.tex                            # main doc, AAAI 2026 docclass
@@ -77,8 +77,7 @@ aies26/
 │   ├── 02_conceptual_core.tex
 │   ├── 03_bayesian_model.tex                # LOAD-BEARING
 │   ├── 04_three_sided.tex
-│   ├── 05_black_market.tex                  # compressed
-│   ├── 06_illustrations.tex                 # stylized facts, NOT empirics
+│   ├── 05_stylized_facts.tex                # merged market theory + illustrations
 │   ├── 07_cheap_talk.tex
 │   ├── 08_mechanism_design.tex              # LOAD-BEARING
 │   └── 09_epilogue.tex
@@ -105,11 +104,11 @@ Operations (all paths relative to repo root):
 8. `cp _inputs/template_aaai26/AnonymousSubmission/LaTeX/aaai2026.sty .`
 9. `cp _inputs/template_aaai26/AnonymousSubmission/LaTeX/aaai2026.bst .`
 10. `rm -rf _inputs/`
-11. Create `sections/00_frontmatter.tex` … `sections/09_epilogue.tex` as stubs (each: section header + `% TODO`).
-12. Create `arbitrage.tex` with AAAI 2026 preamble (§5 below) and `\input{sections/*}`.
+11. Create `sections/00_frontmatter.tex`, `sections/01_introduction.tex`, `sections/02_conceptual_core.tex`, `sections/03_bayesian_model.tex`, `sections/04_three_sided.tex`, `sections/05_stylized_facts.tex`, `sections/07_cheap_talk.tex`, `sections/08_mechanism_design.tex`, `sections/09_epilogue.tex` as stubs (each: section header + `% TODO`).
+12. Create `arbitrage.tex` with AAAI 2026 preamble (§4 below) and `\input{sections/*}`.
 13. Create empty `arbitrage.bib` (entries land in Phase 6).
 14. Create `README.md` (one paragraph: title, status, build command).
-15. Extend `.gitignore` (§6 below).
+15. Extend `.gitignore` (§5 below).
 16. Initial scaffold commit.
 
 After this commit, run `pdflatex arbitrage` once to confirm the stub document compiles before any prose is added.

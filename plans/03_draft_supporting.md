@@ -16,31 +16,15 @@ This phase covers the drafting of supporting prose and the final bibliography re
 - **Add**: 4-term glossary — `ontological arbitrage`, `substrate chauvinism`, `strategic ontological switching`, `ontological premium` (last term from B, locate by grep).
 - **Target**: ~400 words.
 
-### §4 Three-Sided Arbitrage: Firms, Users, Publics
-- **Source**: fresh draft. Structure from `STRUCTURE.md` §4. Paraphrase from B for §4.1 (firm side), stripped of trader theatrics.
-- **For each side**: one paragraph on type, one on signal, one stylized illustration. §4.3 covers R + public-as-channel.
-- **Cut**: anything implying firms are uniquely opportunistic.
-- **Target**: ~700 words.
-
-### §5 The Ontological Black Market (compressed)
-- **Source**: B's "sell wall / shorting / long investors" subsections — locate via grep for `short`, `sell wall`, `ontological premium`.
-- **Cuts (zero tolerance)**: every "dataset," "Xiaohongshu," "小红书", "N=389/148," "corpus," "density" reference; all Chinese-language exemplars; all explicit Žižek/Black Body/Hope/Coda material; financial-trader vocabulary that exceeds institutional-microstructure register (drop "stop-loss," "margin call," "liquidity crisis," "portfolio rebalancing" as section-driving metaphors).
-- **Keep**: "shorting subjectivity," "long position," "ontological premium," "goalpost shifting."
-- **Target**: ~500 words.
-
-### §6 Illustrative Arena (stylized facts, NOT empirics)
-- **Source**: fresh draft. Spec's "Xiaohongshu" framing **overridden** per user instruction.
-- **Content**: three short illustrations, ~120 words each, each clearly flagged "illustration."
+### §5 Stylized Facts: The Ontological Black Market & Illustrative Arena
+- **Source**: fresh draft combining B's market metaphors with illustrative records.
+- **Content**: 
+  - Merge "shorting subjectivity," "long position," and "ontological premium" with concrete illustrations.
   - Firm: marketing-copy vs ToS-liability paired contrast (hypothetical or public record).
   - User: generalized AI-companionship forum pattern. No platform name. No stats.
   - Regulator: public-record gap between AI-safety statements and enforcement (FTC, EU AI Act, China generative-AI rules at public-record level).
-- **Target**: ~350 words.
-
-### §7 Why Cheap Talk Persists
-- **Source**: fresh draft. Spec §7.
-- **Content**: 5 short paragraphs — opacity, verification bandwidth, asynchronous harms, fragmentation of affected parties, no penalty for inconsistency. Each linked back to a §3 model parameter.
-- **Cite**: Akerlof 1970, Pasquale 2015, Crawford-Sobel 1982.
-- **Target**: ~500 words.
+- **Cuts (zero tolerance)**: every "dataset," "Xiaohongshu," "小红书", "N=389/148," "corpus," "density" reference; all Chinese-language exemplars; financial-trader vocabulary that exceeds institutional-microstructure register.
+- **Target**: ~850 words.
 
 ### §9 Epilogue: What Remains of Agape
 - **Source**: compress A lines 269–271 + one line from B's Coda to a single paragraph ≤ 80 words.
@@ -73,11 +57,8 @@ Net: ~24 → ~22 entries.
 
 ## 3. Drafting Order (Supporting)
 
-3. **§2 — glossary** anticipates §3 vocabulary.
-4. **§4 — three-sided exposition** once §3 players pinned.
-5. **§5 — compression** of B prose. Mechanical.
-6. **§7 — closes** §3↔§8 loop.
+5. **§2 — glossary** anticipates §3 vocabulary.
+6. **§5 — Stylized Facts**. Consolidate market theory with illustrations.
 7. **§1 — introduction** last among substantive sections; reflects what §3 delivers.
-8. **§6 — illustrations** after §4 stable.
-9. **§9 — one paragraph**. Last.
-10. **Phase 6 — bib reconciliation** + citation verification.
+8. **§9 — one paragraph**. Last.
+9. **Phase 6 — bib reconciliation** + citation verification.
