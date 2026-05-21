@@ -52,103 +52,117 @@ record register_belief_system =
 locale sanctionable_inconsistency = cheap_talk_game +
   fixes rho_R :: real
     and sanction_cost :: real
-    and catastrophic_liability :: real
+    and agentic_commitment_cost :: real
   assumes rho_R_bounds: "0 \<le> rho_R \<and> rho_R \<le> 1"
     and sanction_cost_nonneg: "0 \<le> sanction_cost"
-    and catastrophic_liability_nonneg: "0 \<le> catastrophic_liability"
+    and agentic_commitment_cost_pos: "0 < agentic_commitment_cost"
 begin
 
 definition expected_sanction :: real where
   "expected_sanction = rho_R * sanction_cost"
 
 text \<open>
-  A consistent-agentic register sends Anthropomorphic on every channel,
-  including liability-facing ones. This avoids the cross-channel
-  inconsistency predicate but exposes the firm to catastrophic liability
-  because the firm has voluntarily accepted the higher ontological standard
-  in its own legal filings.
+  Register classes.  Safety_Documentation remains neutral in the baseline
+  model: these classes constrain user-facing and liability-facing channels.
 \<close>
-definition consistent_agentic :: "claim_register \<Rightarrow> bool" where
-  "consistent_agentic r \<longleftrightarrow>
-     (\<forall>c. r c = Anthropomorphic)"
+definition arbitrage_register :: "claim_register \<Rightarrow> bool" where
+  "arbitrage_register r \<longleftrightarrow>
+     (\<forall>u. user_facing u \<longrightarrow> r u = Anthropomorphic) \<and>
+     (\<forall>l. liability_facing l \<longrightarrow> r l = Deflationary)"
+
+definition all_agentic_register :: "claim_register \<Rightarrow> bool" where
+  "all_agentic_register r \<longleftrightarrow>
+     (\<forall>u. user_facing u \<longrightarrow> r u = Anthropomorphic) \<and>
+     (\<forall>l. liability_facing l \<longrightarrow> r l = Anthropomorphic)"
+
+definition harmonized_deflationary_register :: "claim_register \<Rightarrow> bool" where
+  "harmonized_deflationary_register r \<longleftrightarrow>
+     (\<forall>c. user_facing c \<or> liability_facing c \<longrightarrow> r c = Deflationary)"
 
 text \<open>
-  The payoff for an inconsistent register includes the ontological premium
-  from user-facing channels, but incurs an expected sanction cost due to
-  cross-channel contradiction. A consistent-agentic register earns the
-  ontological premium but incurs the full catastrophic liability cost,
-  because the firm has voluntarily extended agentic representations into
-  its own liability-facing documents.
+  The firm earns the ontological premium only from the arbitrage register:
+  user-facing anthropomorphic claims paired with liability-facing deflation.
+  A fully agentic register does not earn that arbitrage premium and instead
+  incurs a positive liability-facing commitment cost.
 \<close>
+definition register_premium :: "claim_register \<Rightarrow> real" where
+  "register_premium r =
+    (if arbitrage_register r then ontological_premium else 0)"
+
+definition register_sanction :: "claim_register \<Rightarrow> real" where
+  "register_sanction r =
+    (if inconsistent_register r then expected_sanction else 0)"
+
+definition register_commitment_cost :: "claim_register \<Rightarrow> real" where
+  "register_commitment_cost r =
+    (if all_agentic_register r then agentic_commitment_cost else 0)"
+
 definition firm_payoff_register :: "claim_register \<Rightarrow> real" where
   "firm_payoff_register r =
-    (if inconsistent_register r then ontological_premium - expected_sanction
-     else if consistent_agentic r then ontological_premium - catastrophic_liability
-     else 0)"
+     register_premium r - register_sanction r - register_commitment_cost r"
 
 text \<open>
-  The baseline harmonized fallback yields zero payoff, as it assumes
-  consistent messaging that does not arbitrage user and liability channels
-  for the premium.
+  Best response is pure payoff maximization.
 \<close>
 definition is_best_response_register :: "claim_register \<Rightarrow> bool" where
   "is_best_response_register r \<longleftrightarrow>
     (\<forall>r'. firm_payoff_register r \<ge> firm_payoff_register r')"
 
-theorem inconsistent_register_not_best_response:
-  assumes "inconsistent_register r"
-    and "expected_sanction > ontological_premium"
-  shows "\<not> is_best_response_register r"
+theorem harmonized_deflationary_payoff_zero:
+  shows "firm_payoff_register (\<lambda>c. Deflationary) = 0"
 proof -
-  have payoff_r: "firm_payoff_register r = ontological_premium - expected_sanction"
-    using assms(1) unfolding firm_payoff_register_def by simp
-  
-  text \<open>Construct a harmonized register as a profitable deviation.\<close>
-  let ?r_harm = "\<lambda>c. Deflationary"
-  have "\<not> inconsistent_register ?r_harm"
+  let ?r = "\<lambda>c. Deflationary"
+  have not_arbitrage: "\<not> arbitrage_register ?r"
+    unfolding arbitrage_register_def user_facing_def by auto
+  have not_inconsistent: "\<not> inconsistent_register ?r"
     unfolding inconsistent_register_def by simp
-  moreover have "\<not> consistent_agentic ?r_harm"
-    unfolding consistent_agentic_def by auto
-  ultimately have payoff_harm: "firm_payoff_register ?r_harm = 0"
-    unfolding firm_payoff_register_def by simp
-
-  from assms(2) payoff_r payoff_harm
-  have "firm_payoff_register r < firm_payoff_register ?r_harm"
+  have not_all_agentic: "\<not> all_agentic_register ?r"
+    unfolding all_agentic_register_def user_facing_def by auto
+  show ?thesis
+    using not_arbitrage not_inconsistent not_all_agentic
+    unfolding firm_payoff_register_def register_premium_def register_sanction_def
+      register_commitment_cost_def
     by simp
-  then show ?thesis
-    unfolding is_best_response_register_def by (auto simp add: not_le)
 qed
 
-text \<open>
-  The consistent-agentic strategy (sending Anthropomorphic everywhere) is
-  not a best response when the catastrophic liability exceeds the
-  ontological premium.  The firm can profitably deviate to the harmonized
-  deflationary register.
-\<close>
-theorem consistent_agentic_not_best_response:
-  assumes "consistent_agentic r"
-    and "catastrophic_liability > ontological_premium"
-  shows "\<not> is_best_response_register r"
+lemma harmonized_deflationary_register_fallback:
+  shows "harmonized_deflationary_register (\<lambda>c. Deflationary)"
+  unfolding harmonized_deflationary_register_def by simp
+
+lemma all_agentic_register_payoff:
+  assumes "all_agentic_register r"
+  shows "firm_payoff_register r = - agentic_commitment_cost"
 proof -
   have not_inconsistent: "\<not> inconsistent_register r"
-    using assms(1) unfolding consistent_agentic_def inconsistent_register_def
+    using assms unfolding all_agentic_register_def inconsistent_register_def
     by auto
-  have payoff_r: "firm_payoff_register r = ontological_premium - catastrophic_liability"
-    using assms(1) not_inconsistent unfolding firm_payoff_register_def by simp
+  have not_arbitrage: "\<not> arbitrage_register r"
+    using assms unfolding all_agentic_register_def arbitrage_register_def
+      liability_facing_def
+    by auto
+  have no_premium: "register_premium r = 0"
+    using not_arbitrage unfolding register_premium_def by simp
+  have no_sanction: "register_sanction r = 0"
+    using not_inconsistent unfolding register_sanction_def by simp
+  have commitment: "register_commitment_cost r = agentic_commitment_cost"
+    using assms unfolding register_commitment_cost_def by simp
+  show ?thesis
+    unfolding firm_payoff_register_def no_premium no_sanction commitment by simp
+qed
 
+theorem all_agentic_register_not_best_response:
+  assumes "all_agentic_register r"
+  shows "\<not> is_best_response_register r"
+proof -
   let ?r_harm = "\<lambda>c. Deflationary"
-  have "\<not> inconsistent_register ?r_harm"
-    unfolding inconsistent_register_def by simp
-  moreover have "\<not> consistent_agentic ?r_harm"
-    unfolding consistent_agentic_def by auto
-  ultimately have payoff_harm: "firm_payoff_register ?r_harm = 0"
-    unfolding firm_payoff_register_def by simp
-
-  from assms(2) payoff_r payoff_harm
-  have "firm_payoff_register r < firm_payoff_register ?r_harm"
-    by simp
-  then show ?thesis
-    unfolding is_best_response_register_def by (auto simp add: not_le)
+  have payoff_r: "firm_payoff_register r = - agentic_commitment_cost"
+    using all_agentic_register_payoff assms by simp
+  have payoff_harm: "firm_payoff_register ?r_harm = 0"
+    using harmonized_deflationary_payoff_zero by simp
+  have strict: "firm_payoff_register r < firm_payoff_register ?r_harm"
+    using payoff_r payoff_harm agentic_commitment_cost_pos by simp
+  show ?thesis
+    using strict unfolding is_best_response_register_def by (meson less_le_not_le)
 qed
 
 text \<open>
@@ -168,12 +182,83 @@ definition register_firm_sequentially_rational :: "register_strategy_profile \<R
   "register_firm_sequentially_rational \<sigma> \<longleftrightarrow>
      (\<forall>t. register_is_best_response_firm t (register_firm_strategy \<sigma> t))"
 
-theorem inconsistent_on_path_not_sequentially_rational:
-  assumes "expected_sanction > ontological_premium"
-    and "inconsistent_register (register_firm_strategy \<sigma> t)"
+theorem all_agentic_on_path_not_sequentially_rational:
+  assumes "all_agentic_register (register_firm_strategy \<sigma> t)"
   shows "\<not> register_firm_sequentially_rational \<sigma>"
 proof -
-  from assms(2) and assms(1) have "\<not> is_best_response_register (register_firm_strategy \<sigma> t)"
+  from assms have "\<not> is_best_response_register (register_firm_strategy \<sigma> t)"
+    using all_agentic_register_not_best_response by simp
+  then have "\<not> register_is_best_response_firm t (register_firm_strategy \<sigma> t)"
+    unfolding register_is_best_response_firm_def by simp
+  then show ?thesis
+    unfolding register_firm_sequentially_rational_def by metis
+qed
+
+end
+
+text \<open>
+  We define a sublocale for regimes where the expected sanction dominates the
+  ontological premium. This avoids repeating the hypothesis in every theorem.
+\<close>
+locale strong_enforcement = sanctionable_inconsistency +
+  assumes expected_sanction_dominates: "expected_sanction > ontological_premium"
+begin
+
+lemma arbitrage_register_inconsistent:
+  assumes "arbitrage_register r"
+  shows "inconsistent_register r"
+  using assms unfolding arbitrage_register_def inconsistent_register_def
+    user_facing_def liability_facing_def
+  by blast
+
+theorem inconsistent_register_not_best_response:
+  assumes "inconsistent_register r"
+  shows "\<not> is_best_response_register r"
+proof -
+  have payoff_r_bound: "firm_payoff_register r \<le> ontological_premium - expected_sanction"
+  proof -
+    have "register_premium r \<le> ontological_premium"
+      unfolding register_premium_def using premium_pos by auto
+    moreover have "register_sanction r = expected_sanction"
+      using assms(1) unfolding register_sanction_def by simp
+    moreover have "0 \<le> register_commitment_cost r"
+      unfolding register_commitment_cost_def
+      using agentic_commitment_cost_pos by auto
+    ultimately show ?thesis
+      unfolding firm_payoff_register_def by simp
+  qed
+
+  text \<open>Construct a harmonized register as a profitable deviation.\<close>
+  let ?r_harm = "\<lambda>c. Deflationary"
+  have payoff_harm: "firm_payoff_register ?r_harm = 0"
+    using harmonized_deflationary_payoff_zero by simp
+
+  from expected_sanction_dominates payoff_r_bound payoff_harm
+  have strictly_less: "firm_payoff_register r < firm_payoff_register ?r_harm"
+    by simp
+
+  show ?thesis
+  proof (rule ccontr)
+    assume "\<not> \<not> is_best_response_register r"
+    then have "is_best_response_register r" by simp
+    then have "\<forall>r'. firm_payoff_register r \<ge> firm_payoff_register r'"
+      unfolding is_best_response_register_def by simp
+    then have "firm_payoff_register r \<ge> firm_payoff_register ?r_harm"
+      by simp
+    with strictly_less show False by simp
+  qed
+qed
+
+theorem arbitrage_register_not_best_response:
+  assumes "arbitrage_register r"
+  shows "\<not> is_best_response_register r"
+  using assms arbitrage_register_inconsistent inconsistent_register_not_best_response by blast
+
+theorem inconsistent_on_path_not_sequentially_rational:
+  assumes "inconsistent_register (register_firm_strategy \<sigma> t)"
+  shows "\<not> register_firm_sequentially_rational \<sigma>"
+proof -
+  from assms(1) have "\<not> is_best_response_register (register_firm_strategy \<sigma> t)"
     using inconsistent_register_not_best_response by simp
   then have "\<not> register_is_best_response_firm t (register_firm_strategy \<sigma> t)"
     unfolding register_is_best_response_firm_def by simp
@@ -181,17 +266,12 @@ proof -
     unfolding register_firm_sequentially_rational_def by metis
 qed
 
-text \<open>
-  Bridge theorem: consistent-agentic claims on the equilibrium path are also
-  pruned from any sequentially rational strategy profile.
-\<close>
-theorem consistent_agentic_on_path_not_sequentially_rational:
-  assumes "catastrophic_liability > ontological_premium"
-    and "consistent_agentic (register_firm_strategy \<sigma> t)"
+theorem arbitrage_on_path_not_sequentially_rational:
+  assumes "arbitrage_register (register_firm_strategy \<sigma> t)"
   shows "\<not> register_firm_sequentially_rational \<sigma>"
 proof -
-  from assms(2) and assms(1) have "\<not> is_best_response_register (register_firm_strategy \<sigma> t)"
-    using consistent_agentic_not_best_response by simp
+  from assms have "\<not> is_best_response_register (register_firm_strategy \<sigma> t)"
+    using arbitrage_register_not_best_response by simp
   then have "\<not> register_is_best_response_firm t (register_firm_strategy \<sigma> t)"
     unfolding register_is_best_response_firm_def by simp
   then show ?thesis
