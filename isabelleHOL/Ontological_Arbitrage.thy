@@ -1,21 +1,16 @@
 theory Ontological_Arbitrage
-  imports Main "HOL-Probability.Probability"
+  imports Complex_Main
 begin
 
 section \<open>Ontological Arbitrage: Bayesian Signaling Equilibrium\<close>
 
 text \<open>
-  This theory formalizes the sequential signaling game between a Firm (F),
-  a User (U), and a Regulator (R) under incomplete information.
-  It demonstrates both the cheap-talk pooling equilibrium and the
-  separating equilibrium achieved via costly audit trails.
+  This theory formalizes a simplified Bayesian signaling model for
+  ontological arbitrage.  It records two equilibrium claims: cheap talk admits
+  a pooling perfect Bayesian equilibrium, while a single-crossing audit cost
+  supports a separating equilibrium.
 
-  Names follow the Isabelle convention: theory names use capitalized words
-  separated by underscores, while locales, constants, and lemmas use
-  lower-case names separated by underscores. Constructors use descriptive
-  capitalized names.
-
-  Mapping to paper notation:
+  Paper notation:
     prior_low            \<leftrightarrow> \<pi>(L)
     prior_high           \<leftrightarrow> \<pi>(H)
     ontological_premium  \<leftrightarrow> \<Delta>_F
@@ -31,45 +26,37 @@ text \<open>
 
 subsection \<open>Types and Action Spaces\<close>
 
-text \<open>Players hold private types. The Firm's governance is High or Low.\<close>
+text \<open>
+  The model has three players: a firm, a user, and a regulator.  The firm's
+  private information includes both governance quality and system opacity;
+  receivers observe only the messages, actions, and public signal encoded
+  below.
+\<close>
+
 datatype firm_type = High_Gov | Low_Gov
 
-text \<open>The User's vulnerability status.\<close>
 datatype user_type = High_Vuln | Low_Vuln
 
-text \<open>The Regulator's bandwidth for enforcement.\<close>
 datatype regulator_type = High_Bandwidth | Low_Bandwidth
 
-text \<open>
-  Messages sent by the players.
-  Firm chooses between anthropomorphic marketing and policy-deflationary claims.
-\<close>
 datatype firm_message = Anthropomorphic | Deflationary
 
-text \<open>User chooses to invest relationally or detach.\<close>
 datatype user_action = Invest | Detach
 
-text \<open>Regulator chooses to Inspect, Sanction, or Abstain.\<close>
 datatype regulator_action = Inspect | Sanction | Abstain
 
-text \<open>Public signal acts as an external modifier to beliefs.\<close>
 datatype public_signal = Neutral | Adverse_Public_Signal
 
-text \<open>
-  System opacity \<theta>_S is a private parameter to the firm.
-  It is High or Low and is part of the firm's private information.
-\<close>
 datatype opacity = High_Opacity | Low_Opacity
 
-text \<open>The firm's true private type is a pair of governance and opacity.\<close>
 type_synonym firm_private_type = "firm_type \<times> opacity"
 
-text \<open>Observation types for each player.\<close>
+text \<open>Observation spaces used in the strategy-profile records.\<close>
 type_synonym firm_observation = "firm_private_type"
 type_synonym user_observation = "firm_message \<times> user_type"
 type_synonym regulator_observation = "firm_message \<times> user_action \<times> public_signal \<times> regulator_type"
 
-
+text \<open>Strategy and belief records for the cheap-talk and audit-trail games.\<close>
 record strategy_profile =
   firm_strategy   :: "firm_private_type \<Rightarrow> firm_message"
   user_strategy   :: "firm_message \<Rightarrow> user_type \<Rightarrow> user_action"
@@ -91,8 +78,8 @@ record audit_belief_system =
 subsection \<open>Cheap-Talk Game: Pooling Equilibrium\<close>
 
 text \<open>
-  We define a locale to fix the constants and assumptions of the
-  cheap-talk game without committing to specific numerical values.
+  The cheap-talk locale fixes the payoff primitives and the parameter region in
+  which users invest and regulators abstain after the pooling message.
 \<close>
 locale cheap_talk_game =
   fixes prior_low :: real
@@ -113,8 +100,7 @@ locale cheap_talk_game =
 begin
 
 text \<open>
-  Payoff functions.
-  The firm's payoff depends on whether it sends Anthropomorphic and the user invests.
+  Payoffs are normalized so that inactive or default choices yield zero.
 \<close>
 
 definition firm_payoff :: "firm_type \<Rightarrow> firm_message \<Rightarrow> user_action \<Rightarrow> regulator_action \<Rightarrow> real" where
@@ -135,9 +121,8 @@ definition regulator_payoff :: "regulator_type \<Rightarrow> firm_message \<Righ
      else - regulator_cost r + (1 - p_high) * regulatory_damage)"
 
 text \<open>
-  Under the cheap-talk condition, both firm types face zero cost for sending
-  either message. Thus, the anthropomorphic message is strictly preferred if it
-  induces user investment.
+  Candidate pooling profile: both governance types send the anthropomorphic
+  message, users invest after it, and regulators abstain.
 \<close>
 
 definition firm_pooling_strategy :: "firm_type \<Rightarrow> firm_message" where
@@ -170,8 +155,8 @@ lemma regulator_abstains_after_pooling:
 
 text \<open>
   In this pooling equilibrium, the posterior belief of the regulator and user
-  after observing the anthropomorphic message remains equal to the prior,
-  because the message is uninformative.
+  after the anthropomorphic message remains equal to the prior because the
+  message is uninformative.
 \<close>
 lemma posterior_eq_prior_if_pooling:
   shows "posterior_high_after_pooling = prior_high"
@@ -179,14 +164,9 @@ lemma posterior_eq_prior_if_pooling:
 
 
 text \<open>
-  Strategy profile and belief system records.
-\<close>
-
-
-
-text \<open>
-  Sequential rationality: each player's prescribed action maximizes expected
-  payoff given beliefs and other players' strategies.
+  The PBE predicates are specialized to the candidate histories used in the
+  proposition.  They avoid encoding the full extensive-form game while still
+  checking the payoff inequalities and on-path Bayes consistency needed below.
 \<close>
 
 definition is_sequentially_rational :: "strategy_profile \<Rightarrow> belief_system \<Rightarrow> bool" where
@@ -222,8 +202,8 @@ definition is_pbe :: "strategy_profile \<Rightarrow> belief_system \<Rightarrow>
 
 
 text \<open>
-  Bayes' rule on path: the posterior probability of High_Gov after observing
-  message m equals the prior when m is sent by all types (pooling).
+  For the pooling message, Bayes' rule reduces to prior normalization over all
+  governance types.
 \<close>
 
 definition bayes_update :: "(firm_type \<Rightarrow> real) \<Rightarrow> (firm_type \<Rightarrow> bool) \<Rightarrow> firm_type \<Rightarrow> real" where
@@ -244,7 +224,7 @@ lemma regulator_posterior_eq_prior_under_pooling:
 
 
 text \<open>
-  Incentive-compatibility lemmas for the pooling equilibrium.
+  Payoff inequalities for the pooling candidate.
 \<close>
 
 lemma firm_no_deviation_to_deflationary:
@@ -282,10 +262,9 @@ qed
 
 
 text \<open>
-  Intuitive Criterion.
-  The pooling equilibrium survives because the off-path message Deflationary
-  does not allow receivers to exclude any type: both types would prefer
-  Anthropomorphic if it induced investment, and Deflationary yields zero.
+  The following predicate captures the limited Intuitive-Criterion claim used
+  here: the off-path deflationary message is not profitable relative to the
+  pooling payoff under the specified receiver response.
 \<close>
 
 definition equilibrium_firm_payoff :: "strategy_profile \<Rightarrow> firm_private_type \<Rightarrow> real" where
@@ -313,8 +292,7 @@ lemma pooling_survives_intuitive_criterion_hold:
 
 
 text \<open>
-  Top-level theorem: a pooling PBE exists in the cheap-talk game and it
-  survives the Intuitive Criterion.
+  Existence statement for the cheap-talk pooling equilibrium.
 \<close>
 
 theorem proposition_1_cheap_talk_pooling_pbe:
@@ -344,8 +322,8 @@ end
 subsection \<open>Mechanism Design: Costly Audit Trails\<close>
 
 text \<open>
-  We now introduce a mechanism-design locale where the anthropomorphic
-  message requires a verifiable audit trail of intensity 'e'.
+  The audit-trail locale adds a costly signal whose cost satisfies a
+  single-crossing condition across governance types.
 \<close>
 locale audit_trail_game =
   fixes high_audit_slope :: real
@@ -381,8 +359,8 @@ definition firm_separating_payoff :: "firm_type \<Rightarrow> firm_message \<Rig
      else 0)"
 
 text \<open>
-  In the separating equilibrium, only the high-governance firm finds it
-  profitable to emit the audited Anthropomorphic signal.
+  Candidate separating profile: only the high-governance firm emits the audited
+  anthropomorphic signal.
 \<close>
 definition firm_separating_strategy :: "firm_type \<Rightarrow> firm_message" where
   "firm_separating_strategy firm =
@@ -416,7 +394,7 @@ lemma firm_separating_strategy_reveals_type:
 
 
 text \<open>
-  Incentive compatibility for the separating equilibrium.
+  Payoff inequalities for the separating candidate.
 \<close>
 
 lemma high_gov_prefers_audited_anthropomorphic:
@@ -431,10 +409,8 @@ lemma low_gov_prefers_deflationary:
 
 
 text \<open>
-  Strategy profile and belief system for the audit-trail game.
+  Specialized PBE predicates for the separating candidate.
 \<close>
-
-
 
 definition is_separating :: "audit_strategy_profile \<Rightarrow> bool" where
   "is_separating \<sigma> \<longleftrightarrow>
@@ -470,7 +446,7 @@ lemma audit_posterior_on_path:
 
 
 text \<open>
-  Top-level theorem: a separating PBE exists in the audit-trail game.
+  Existence statement for the audit-trail separating equilibrium.
 \<close>
 
 theorem proposition_1_separating_pbe:
