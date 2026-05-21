@@ -1,5 +1,4 @@
-# Old 9 sections structure, for paragraphs location reference only.
-# Do not treat as source of truth!
+
 
 ## Our Approach:
 
@@ -7,6 +6,8 @@
 - Aren't just saying frame-switching is bad; proving why it is an incentive-compatible equilibrium for firms, users, and regulators. 
 - Lastly offer actual mechanism design solutions (costly signals, sanctionable inconsistency) to shift the payoff matrix.
 
+# Old 9 sections structure, for paragraphs location reference only.
+# Do not treat as source of truth!
 
 ## Original Aggregated Sections (logical tautology)
 ### §1 Introduction: The Hard Problem as Strategic Ontology
