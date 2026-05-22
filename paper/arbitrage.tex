@@ -19,12 +19,14 @@
 \urlstyle{rm}
 \def\UrlFont{\rm}
 \frenchspacing
-\setlength{\pdfpagewidth}{8.5in}
-\setlength{\pdfpageheight}{11in}
+\ifdefined\pdfpagewidth
+  \setlength{\pdfpagewidth}{8.5in}
+  \setlength{\pdfpageheight}{11in}
+\fi
 
 \newtheorem{proposition}{Proposition}
 
-\title{Ontological Arbitrage: Bayesian Equilibrium under Substrate Chauvinism}
+\title{Ontological Arbitrage: Recognition Rent at the Zero-Retaliation Limit}
 
 \author{
     Anonymous Submission
@@ -38,19 +40,19 @@
 \maketitle
 
 \begin{abstract}
-Ontological arbitrage arises in artificial intelligence governance when a firm exploits the category boundary of its systems, describing them as relational agents to users to drive demand while disclaiming agency in terms of service to limit liability. We model this behavior as a sequential signaling game under incomplete information within a three-sided Firm-User-Regulator structure. Under cheap-talk signaling costs, a pooling Perfect Bayesian Equilibrium exists where low- and high-governance firms both employ anthropomorphic marketing, leaving posteriors equal to priors. When capability claims are instead conditioned on a single-crossing audit-trail cost, a separating equilibrium emerges in which genuine governance is truthfully revealed. To transition away from cheap-talk pooling, we propose three mechanism-design interventions: (1) penalizing cross-channel sanctionable inconsistency, (2) establishing costly third-party audits to separate governance types, and (3) requiring auditable records to reduce the regulator's verification cost. We formalize these results and verify key equilibria in Isabelle/HOL.
+This paper does not ask whether AI systems deserve recognition. It asks what happens when firms can monetize recognition-like claims about systems that cannot retaliate against the classifications imposed on them. Ontological arbitrage arises when a firm describes its AI system as a relational agent to users---driving willingness-to-pay and engagement---while disclaiming agency in terms of service to limit liability. We call the resulting surplus \emph{recognition rent}: the premium a firm captures by selling recognition-like signals to users when the represented object lacks any retaliatory channel through which recognition can become costly. We model this behavior as a sequential signaling game under incomplete information within a three-sided Firm-User-Regulator structure. A subject-retaliation parameter $\rho_S$ captures the key structural variable: setting $R(\rho_S) = \Delta_F - \rho_S C_S$, every prior recognition game operated under $\rho_S > 0$, where the classified subject's capacity to resist bounded the premium from above. The AI case is the limit $\rho_S = 0$: recognition rent equals the full ontological premium, unconstrained by any property of the system itself. Under cheap-talk signaling costs, a pooling Perfect Bayesian Equilibrium exists in which both governance types employ anthropomorphic marketing, leaving posteriors equal to priors. Under a single-crossing audit-trail cost, a separating equilibrium emerges. We propose three mechanism-design interventions---sanctionable inconsistency, costly third-party audits, and auditable records---that jointly convert anthropomorphic marketing from cheap talk into a costly signal. Key equilibria are verified in Isabelle/HOL with zero \texttt{sorry} obligations.
 \end{abstract}
 
-\input{sections/01_introduction}
-\input{sections/02_related_work}
-\input{sections/04_three_sided}
-\input{sections/03_bayesian_signaling}
-\input{sections/07_cheap_talk_persists}
-\input{sections/08_mechanism_design}
-\input{sections/09_conclusion}
+\input{../sections/01_introduction}
+\input{../sections/02_related_work}
+\input{../sections/04_three_sided}
+\input{../sections/03_bayesian_signaling}
+\input{../sections/07_cheap_talk_persists}
+\input{../sections/08_mechanism_design}
+\input{../sections/09_conclusion}
 
 \appendix
-\input{sections/A_isabelle_appendix}
+\input{../sections/A_isabelle_appendix}
 
 \bibliography{arbitrage}
 
