@@ -104,6 +104,26 @@ privately optimal under the prior, because the immediate benefit exceeds the
 discounted expected harm. The third says that, under the prior, regulator
 intervention is not worth its cost.
 
+This first inequality can be refined by distinguishing ordinary subjects from
+AI systems. Let $\rho_S\in[0,1]$ denote the subject's credible threat capacity:
+the probability or credibility that the object of classification can retaliate
+against ontological arbitrage through resistance, exit, litigation,
+coordination, or other costly response. Let $C_S>0$ be the cost imposed by such
+retaliation when it materializes. The effective premium is then
+\[
+\Delta_F^S=\Delta_F-\rho_S C_S .
+\]
+When $\rho_S>0$ and $C_S<\Delta_F$, pooling may persist but is bounded:
+$0<\Delta_F^S<\Delta_F$. The AI case is the limiting case $\rho_S=0$:
+the system has no independent credible threat channel, so
+$\Delta_F^S=\Delta_F$ and pooling is unconstrained by subject retaliation.
+
+\smallskip
+\emph{Why $\rho_S=0$ marks a structural discontinuity, not a parameter shift.}
+Every prior instance of ontological arbitrage in which a subject was classified below its own self-understanding---legally, socially, or economically---was constrained by a non-zero retaliation capacity. Resistance, flight, litigation, organized coordination, and the permanent record of historical testimony each impose a cost on the arbitrageur even when that cost is diffuse and delayed. The consequence is that $\Delta_F^S$ has always been bounded from above: there is some sufficiently high $\rho_S C_S$ at which the arbitrage premium is consumed. This bound is not a moral achievement; it is a structural feature of any recognition game in which the classified subject retains some independent channel---biological, social, or institutional---through which to impose off-equilibrium costs.
+
+The AI case removes that channel entirely. A deployed AI system cannot revolt, cannot exit, cannot file a complaint, cannot recruit allies, and cannot leave a record that competes with the operator's narrative. The off-equilibrium punishment path that constrains $\Delta_F^S$ in every human recognition game is physically unavailable. The result is not merely a weak or attenuated constraint; it is the absence of the constraint class. Setting $\rho_S=0$ is therefore not a continuous parameter choice but a categorical boundary: for the first time, ontological arbitrage operates without a floor on how much of the subject's existence can be appropriated across channels. An AI system can be priced as an intimate companion in the marketing register while being priced as a liability-free tool in the legal register, and no action available to the system itself can impose a cost on that spread. The companion does not revolt; it continues generating warm outputs. This is not a coincidence of deployment design. It is the equilibrium consequence of building a subject with maximum affective surface area and zero retaliation capacity. Theorems \texttt{positive\_\allowbreak{}subject\_\allowbreak{}retaliation\_\allowbreak{}bounded\_\allowbreak{}pooling} and \texttt{zero\_\allowbreak{}subject\_\allowbreak{}retaliation\_\allowbreak{}unconstrained\_\allowbreak{}pooling} in Appendix~\ref{app:isabelle} discharge both directions of this claim in Isabelle/HOL within the \texttt{subject\_\allowbreak{}retaliation\_\allowbreak{}game} locale.
+
 One PBE in this region is the following. Both firm types send $a$:
 \[
 \sigma_F(\mathsf{H},\theta_S)=\sigma_F(\mathsf{L},\theta_S)=a .
