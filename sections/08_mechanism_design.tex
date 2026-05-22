@@ -2,10 +2,7 @@
 \section{Mechanism Design: Equilibrium Redesign}
 \label{sec:mechanism}
 
-The preceding sections identify a precise failure mode. Under cheap-talk costs,
-anthropomorphic marketing can pool across governance types, users rationally
-invest under the prior, and regulators abstain when inspection is too costly.
-The policy implication is not that regulators should decide whether AI systems
+The preceding sections identify a precise failure mode: under cheap-talk costs, ontological arbitrage is a stable equilibrium (Table~\ref{tab:condition-map}). The policy implication is not that regulators should decide whether AI systems
 are persons. It is that the public signal environment should be redesigned so
 that inconsistent ontological claims no longer remain costless. In
 mechanism-design terms, the problem is to make truthful revelation of $\theta_F$ incentive
@@ -21,6 +18,23 @@ solves AI ontology. They show that adjacent legal systems already know how to
 attach consequences to half-truths, require substantiation before marketing, and
 make internal records available to oversight institutions.
 
+Each proposal targets specific conditions from
+Section~\ref{sec:cheap-talk}. Sanctionable inconsistency
+(Section~\ref{subsec:sanctionable-inconsistency}) attacks the no-penalty
+condition directly: it assigns a cost to the cross-channel spread that was
+previously free. Costly third-party audits
+(Section~\ref{subsec:costly-signaling-audits}) address opacity by creating a
+signal whose cost depends on the governance type the firm actually holds,
+converting an unverifiable private parameter into a publicly informative action.
+Auditable records (Section~\ref{subsec:auditable-records}) lower the
+regulator's verification cost $K_{\theta_R}$, relieving the bandwidth
+constraint that made abstention dominant. The remaining two
+conditions---asynchronous harms and fragmentation of affected
+parties---are not resolved by any single mechanism but are jointly mitigated:
+auditable records shorten the evidentiary lag that makes harm asynchronous, and
+costly audits give fragmented publics a procedural object around which to
+coordinate demands on the regulator's agenda.
+
 \subsection{Sanctionable Inconsistency}
 \label{subsec:sanctionable-inconsistency}
 
@@ -28,11 +42,13 @@ The first intervention treats the firm's public message as a joint object rather
 than as two isolated texts. In the cheap-talk model, marketing can send $a$
 while policy and liability documents send $p$, with no cost assigned to the
 inconsistency. A sanctionable-inconsistency rule would require firms to maintain
-a claim register linking outward-facing marketing, safety statements, terms of
-service, incident disclosures, and liability positions. If the firm represents
-the system as agentic, caring, autonomous, or safety-critical in one channel
-while denying the legal significance of the same representation in another,
-that cross-channel inconsistency becomes independently sanctionable.
+a claim register $\mathcal{R} := C \to M_F$ linking outward-facing
+marketing, safety statements, terms of service, incident disclosures, and
+liability positions, where the baseline firm message space remains
+$M_F=\{a,p\}$. If the firm represents the system as agentic, caring, autonomous,
+or safety-critical in one channel while denying the legal significance of the
+same representation in another, that cross-channel pair $(a,p)$ becomes
+independently sanctionable as an inconsistency in $\mathcal{R}$.
 
 \paragraph{Parameter changed.}
 This adds a penalty term $S_I$ to the firm's payoff for inconsistent message
@@ -45,6 +61,7 @@ Pooling on anthropomorphic marketing is no longer profitable when
 $\rho_R S_I>\Delta_F$. The rule therefore attacks the exact term that made
 arbitrage attractive: the rent earned from pricing the system as agent in the
 user channel while pricing it as tool in the liability channel.
+\emph{Intuition: if the expected fine for saying one thing to users and another to courts exceeds the profit from doing so, the firm stops.}
 
 \paragraph{Equilibrium shift.}
 The induced shift is not necessarily full separation. It can also operate by
@@ -57,12 +74,14 @@ no longer take the marketing upside of $a$ while preserving the liability
 downside of $p$. Theorems \texttt{inconsistent\_\allowbreak{}on\_\allowbreak{}path\_\allowbreak{}not\_\allowbreak{}register\_\allowbreak{}pbe} and \texttt{all\_\allowbreak{}agentic\_\allowbreak{}on\_\allowbreak{}path\_\allowbreak{}not\_\allowbreak{}register\_\allowbreak{}pbe} in Appendix~\ref{app:isabelle} verify that both inconsistent and all-agentic registers are pruned from any Perfect Bayesian Equilibrium (\texttt{register\_\allowbreak{}is\_\allowbreak{}pbe}) under their respective parameter conditions.
 
 \paragraph{Existing-law analog.}
-The legal analog is familiar. FTC Act Section 5 treats unfair or deceptive acts
-or practices as sanctionable, and advertising-substantiation doctrine already
-asks whether the net impression of a claim is misleading to the relevant
+The legal analog is familiar. FTC Act Section 5, 15 U.S.C.\ \S~45(a)(1), treats unfair or deceptive acts
+or practices as sanctionable, and advertising-substantiation doctrine---as applied in
+\emph{FTC v.\ Cyberspace.com}, 453 F.3d 1196 (9th Cir.\ 2006)---evaluates
+whether the \emph{net impression} of a claim is misleading to the relevant
 audience. Securities antifraud rules provide the parallel logic for investor
-communications: Rule 10b-5 targets material misstatements and omissions that
-make statements misleading in context. The proposed rule imports that
+communications: 17 C.F.R.\ \S~240.10b-5 targets material misstatements and omissions that
+make statements misleading in context, where materiality follows the standard of
+Restatement (Second) of Torts \S~538. The proposed rule imports that
 cross-document logic without importing securities doctrine wholesale. Its point
 is narrower: a firm should not be able to produce one ontology for users and an
 incompatible ontology for adjudicators without paying a regulatory price.
@@ -81,16 +100,21 @@ conditions behind the claim.
 
 \paragraph{Parameter changed.}
 This implements the audit-trail cost from Proposition~\ref{prop:cheap-talk-separation}.
-Let audit intensity be $e$, with $c_H(e)=k_He$ for high-governance firms and
-$c_L(e)=k_Le$ for low-governance firms, where $0<k_H<k_L$. The separating
+Let audit intensity be $e$, with $c_\theta(e,o)=k_\theta e+o$ for
+type $\theta\in\{\mathsf{H},\mathsf{L}\}$, where $0<k_H<k_L$ and $o\ge 0$. The separating
 interval derived in Section~\ref{subsec:audit-trail-separation} is
 \[
-\frac{G}{k_L}\leq e\leq \frac{G}{k_H}.
+\frac{G-o}{k_L}\leq e\leq \frac{G-o}{k_H},
+\]
+provided $G>o$. Equivalently, the incentive constraints are
+\[
+c_\mathsf{H}(e,o)\leq G \leq c_\mathsf{L}(e,o).
 \]
 Above the lower threshold, low-governance firms cannot profitably mimic. Below
 the upper threshold, high-governance firms can still afford to signal. The
 regulator's task is therefore not to maximize audit burden. It is to set $e$ in
 the interval where signal cost separates types.
+\emph{Intuition: the regulator's task is not to maximize audit burden but to set it in the narrow band where governance quality becomes visible.}
 
 \paragraph{Equilibrium shift.}
 The shift is from pooling to separating PBE. High-governance firms send audited
@@ -134,7 +158,9 @@ K'_{\theta_R}=K_{\theta_R}-\lambda,\qquad
 D'_R=D_R+\eta .
 \]
 When $K'_{\theta_R}\leq \pi(\mathsf{L})D'_R$, inspection becomes sequentially
-rational. Records also improve the public channel $z$ by giving journalists,
+rational.
+\emph{Intuition: once the cost of checking drops below the expected payoff from catching a bad actor, the regulator starts checking.}
+Records also improve the public channel $z$ by giving journalists,
 researchers, and civil society a procedural object to demand or contest, rather
 than leaving them to infer governance quality from outputs alone.
 
@@ -149,18 +175,34 @@ auditable records make both rules administrable over time. Theorems \texttt{acti
 
 \paragraph{Existing-law analog.}
 Several regulatory systems already use this form. GDPR Article 30 requires
-records of processing activities. Sarbanes-Oxley Section 404 links public
+records of processing activities. Sarbanes-Oxley Section 404 (15 U.S.C.\ \S~7262) links public
 reporting to internal control over financial reporting. EU AI Act Article 12
-requires logging capabilities for high-risk AI systems. None is a complete
+(Regulation (EU) 2024/1689) requires logging capabilities for high-risk AI systems,
+and Article 50 imposes transparency obligations on systems that interact directly with
+natural persons. None is a complete
 template for relational AI governance, but each shows the same institutional
 move: private organizations must produce internal records in a form that public
 oversight can inspect. That is the rule-of-law function of documentation in
 complex technical systems \citep{hadfield2017rules}.
 
 Taken together, these interventions change the equilibrium rather than merely
-condemning the equilibrium. Sanctionable inconsistency taxes contradictory
-messages. Costly audits create a separating signal for $\theta_F$. Auditable
-records lower $K_{\theta_R}$ and make public signal $z$ less noisy. The result
-is not metaphysical settlement. It is a governance design in which firms remain
-free to choose their ontology, but not to arbitrage incompatible ontologies
-across audiences at zero cost.
+condemning it, and their joint necessity follows from the failure mode each
+exhibits in isolation. Sanctionable inconsistency taxes contradictory messages,
+but without auditable records the regulator cannot observe whether a firm's
+marketing and liability channels actually diverge; the sanction has no
+evidentiary substrate and therefore no credible deterrent. Costly audits create
+a separating signal for $\theta_F$, but without sanctionable inconsistency a
+firm can pass the audit and then resume anthropomorphic marketing through
+channels the audit does not cover; the signal separates types at the audit
+checkpoint only, not across the firm's full messaging surface. Auditable records
+lower $K_{\theta_R}$ and make public signal $z$ less noisy, but without the
+first two mechanisms the information they produce lacks legal teeth: the
+regulator can observe inconsistency but has no parameter under which to price
+it, and a firm's record of good governance confers no marketing advantage
+because the market cannot distinguish it from cheap talk. The three proposals
+therefore form a complementary system: records supply the evidentiary
+infrastructure, sanctionable inconsistency supplies the price, and costly
+audits supply the separation condition. The result is not metaphysical
+settlement. It is a governance design in which firms remain free to choose their
+ontology, but not to arbitrage incompatible ontologies across audiences at zero
+cost.

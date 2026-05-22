@@ -2,7 +2,7 @@
 \section{Why Cheap Talk Persists}
 \label{sec:cheap-talk}
 
-Section~\ref{sec:bayesian} identifies pooling on anthropomorphic marketing as a Perfect Bayesian Equilibrium under cheap-talk cost. That is an existence result; it does not yet explain the empirical stability of pooling across products, vendors, and jurisdictions. This section gives five structural reasons. Each is matched to a parameter of the model so that the mechanism-design proposals of Section~\ref{sec:mechanism} can be read as targeted parameter changes rather than as generic exhortations.
+Section~\ref{sec:bayesian} identifies pooling on anthropomorphic marketing as a Perfect Bayesian Equilibrium under cheap-talk cost. This section gives five structural reasons for the empirical persistence of that equilibrium. Each is matched to a parameter of the model so that the mechanism-design proposals of Section~\ref{sec:mechanism} can be read as targeted parameter changes rather than as generic exhortations.
 
 \emph{Opacity.} The system-opacity parameter $\theta_S$ is private to the firm. Capability claims about a deployed model cannot be falsified by reading model outputs alone, because the same outputs are compatible with very different training procedures, evaluation regimes, and post-deployment monitoring. Opacity is the precondition for the firm's premium: where outsiders could costlessly verify $\theta_F$, the spread between anthropomorphic and deflationary positioning would collapse. This is the lemons logic of \citet{akerlof1970}: under one-sided private information, the market clears at a price that reflects the worst credible quality, except that here the relevant ``quality'' is a governance disposition rather than a physical attribute.
 
@@ -15,3 +15,23 @@ Section~\ref{sec:bayesian} identifies pooling on anthropomorphic marketing as a 
 \emph{No penalty for inconsistency.} The cheap-talk cost structure sets $c_{\theta_F}(a)=c_{\theta_F}(p)=0$ for both governance types and---more importantly for this section---imposes no joint constraint across $m_F$. Marketing copy and policy documentation are produced under different audiences, different review processes, and different liability regimes. Inconsistency between them is not detected as a single offence; it is decomposed into two compliant statements at two different points of contact. The firm's premium $\Delta_F$ is rent earned precisely on this decomposition. Until the signal cost makes inconsistency itself sanctionable---the proposal of Section~\ref{subsec:sanctionable-inconsistency}---there is no parameter under the firm's control whose adjustment would close the spread.
 
 \emph{Pooling is the market's stable terminal state.} These five structural conditions jointly explain why ethical appeals fail to dislodge the equilibrium. They do not fail because AI governance discourse lacks moral seriousness; they fail because moral seriousness is itself a zero-cost signal. Under the cheap-talk cost structure, a declaration of ``responsible AI'' is formally indistinguishable from any other message at $c_{\theta_F}(a)=0$: both governance types can issue it at the same cost, so it contains no type information and moves no posterior. The equilibrium is not a moral failure. It is the unique stable outcome of the incentive structure as currently constituted. A firm that unilaterally forgoes the ontological premium $\Delta_F$---that chooses deflationary marketing across all channels and forfeits the user investment it would otherwise attract---loses revenue it cannot recover from customers who face no such constraint. Market selection eliminates honest deviants not because honesty is penalized directly, but because the competitor who retains $\Delta_F$ captures the market segment that the honest firm vacates. The implication is precise: \emph{the market does not reward honesty; it eliminates firms that do not arbitrage}. The mechanism-design proposals of Section~\ref{sec:mechanism} respond to this implication by changing the cost parameters rather than appealing to the conscience of players who are already acting rationally.
+
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}p{2.7cm}p{2.2cm}p{2.7cm}@{}}
+\toprule
+\textbf{Structural Condition} & \textbf{Model Parameter} & \textbf{Intervention (\S\ref{sec:mechanism})} \\
+\midrule
+No penalty for inconsistency & $c_{\theta_F}(a)=c_{\theta_F}(p)=0$ & Sanctionable inconsistency \\
+Opacity & $\theta_S$ private to firm & Costly third-party audits \\
+Verification bandwidth & $K_{\theta_R}>\pi(\mathsf{L})D_R$ & Auditable records \\
+Asynchronous harms & $H_{\theta_U}$ enters discounted & Jointly mitigated \\
+Fragmentation & $z$ noisy, high coord.\ cost & Jointly mitigated \\
+\bottomrule
+\end{tabular}
+\caption{Mapping of structural persistence conditions to model parameters and mechanism-design interventions.}
+\label{tab:condition-map}
+\end{table}
