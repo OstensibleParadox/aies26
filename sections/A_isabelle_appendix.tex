@@ -1,4 +1,4 @@
-\section{Isabelle/HOL Formalization Appendix}
+\section{Mechanized Verification of Equilibrium Claims (Isabelle/HOL)}
 \label{app:isabelle}
 
 This appendix outlines the formal verification of the signaling game equilibria and mechanism design results using the Isabelle/HOL proof assistant. The complete source code is available in the \texttt{isabelleHOL/} directory across three theory files: \texttt{Ontological\_Arbitrage.thy}, \texttt{Sanctionable\_Inconsistency.thy}, and \texttt{Auditable\_Records.thy}.
@@ -22,7 +22,7 @@ The three mechanism proposals from Section~\ref{sec:mechanism} are each backed b
         \item \texttt{all\_\allowbreak{}agentic\_\allowbreak{}register\_\allowbreak{}not\_\allowbreak{}best\_\allowbreak{}response}: an all-agentic register (anthropomorphic on all user- and liability-facing channels) is not a best response when it incurs a positive liability-facing commitment cost.
         \item \texttt{inconsistent\_\allowbreak{}on\_\allowbreak{}path\_\allowbreak{}not\_\allowbreak{}register\_\allowbreak{}pbe}, \texttt{all\_\allowbreak{}agentic\_\allowbreak{}on\_\allowbreak{}path\_\allowbreak{}not\_\allowbreak{}register\_\allowbreak{}pbe}, and \texttt{arbitrage\_\allowbreak{}on\_\allowbreak{}path\_\allowbreak{}not\_\allowbreak{}register\_\allowbreak{}pbe}: bridge theorems showing that these register types cannot be supported in any Perfect Bayesian Equilibrium (\texttt{register\_\allowbreak{}is\_\allowbreak{}pbe}).
       \end{itemize}
-    \item \textbf{Costly Signaling} (\texttt{Ontological\_Arbitrage.thy}):
+    \item \textbf{Costly Signaling} (\texttt{Ontological\_\allowbreak{}Arbitrage.thy}):
       \begin{itemize}
         \item \texttt{opacity\_\allowbreak{}blocks\_\allowbreak{}signaling}: when the system-opacity penalty exceeds the net benefit of signaling for the high-governance type, even truthful separation is blocked.
         \item \texttt{high\_\allowbreak{}governance\_\allowbreak{}low\_\allowbreak{}opacity\_\allowbreak{}can\_\allowbreak{}signal} and \texttt{low\_\allowbreak{}governance\_\allowbreak{}cannot\_\allowbreak{}mimic}: the single-crossing conditions that support the separating equilibrium.

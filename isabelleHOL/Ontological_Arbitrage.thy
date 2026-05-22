@@ -448,13 +448,11 @@ text \<open>
   subject retaliation.
 \<close>
 
-locale subject_retaliation_game = cheap_talk_game +
+locale subject_retaliation_base_game = cheap_talk_game +
   fixes rho_S :: real
     and subject_retaliation_cost :: real
   assumes rho_S_bounds: "0 \<le> rho_S \<and> rho_S \<le> 1"
     and subject_retaliation_cost_pos: "0 < subject_retaliation_cost"
-    and subject_retaliation_cost_below_premium:
-      "subject_retaliation_cost < ontological_premium"
 begin
 
 definition expected_subject_retaliation :: real where
@@ -473,11 +471,140 @@ definition unconstrained_pooling :: bool where
   "unconstrained_pooling \<longleftrightarrow>
      retaliation_discounted_premium = ontological_premium"
 
+definition retaliation_threshold :: real where
+  "retaliation_threshold = ontological_premium / subject_retaliation_cost"
+
+definition premium_consumed :: bool where
+  "premium_consumed \<longleftrightarrow> retaliation_discounted_premium \<le> 0"
+
 lemma expected_subject_retaliation_nonneg:
   shows "0 \<le> expected_subject_retaliation"
   unfolding expected_subject_retaliation_def
   using rho_S_bounds subject_retaliation_cost_pos
   by (simp add: less_imp_le mult_nonneg_nonneg)
+
+lemma retaliation_threshold_pos:
+  shows "0 < retaliation_threshold"
+  unfolding retaliation_threshold_def
+  using premium_pos subject_retaliation_cost_pos by simp
+
+lemma retaliation_threshold_le_one_iff:
+  shows "retaliation_threshold \<le> 1 \<longleftrightarrow>
+         ontological_premium \<le> subject_retaliation_cost"
+  unfolding retaliation_threshold_def
+  using subject_retaliation_cost_pos
+  by (simp add: pos_divide_le_eq)
+
+lemma discounted_premium_pos_iff_below_threshold:
+  shows "0 < retaliation_discounted_premium \<longleftrightarrow>
+         rho_S < retaliation_threshold"
+proof -
+  have "0 < retaliation_discounted_premium \<longleftrightarrow>
+        rho_S * subject_retaliation_cost < ontological_premium"
+    unfolding retaliation_discounted_premium_def expected_subject_retaliation_def
+    by linarith
+  also have "... \<longleftrightarrow> rho_S < retaliation_threshold"
+    unfolding retaliation_threshold_def
+    using subject_retaliation_cost_pos
+    by (simp add: pos_less_divide_eq mult.commute)
+  finally show ?thesis .
+qed
+
+lemma discounted_premium_zero_iff_at_threshold:
+  shows "retaliation_discounted_premium = 0 \<longleftrightarrow>
+         rho_S = retaliation_threshold"
+  unfolding retaliation_discounted_premium_def expected_subject_retaliation_def
+    retaliation_threshold_def
+  using subject_retaliation_cost_pos
+  by (auto simp add: field_simps)
+
+lemma discounted_premium_neg_iff_above_threshold:
+  shows "retaliation_discounted_premium < 0 \<longleftrightarrow>
+         retaliation_threshold < rho_S"
+proof -
+  have "retaliation_discounted_premium < 0 \<longleftrightarrow>
+        ontological_premium < rho_S * subject_retaliation_cost"
+    unfolding retaliation_discounted_premium_def expected_subject_retaliation_def
+    by linarith
+  also have "... \<longleftrightarrow> retaliation_threshold < rho_S"
+    unfolding retaliation_threshold_def
+    using subject_retaliation_cost_pos
+    by (simp add: pos_divide_less_eq mult.commute)
+  finally show ?thesis .
+qed
+
+lemma premium_consumed_iff_at_or_above_threshold:
+  shows "premium_consumed \<longleftrightarrow> retaliation_threshold \<le> rho_S"
+  unfolding premium_consumed_def
+  using discounted_premium_pos_iff_below_threshold by linarith
+
+theorem bounded_threat_characterization:
+  shows "bounded_pooling \<longleftrightarrow> 0 < rho_S \<and> rho_S < retaliation_threshold"
+proof -
+  have below_original:
+      "retaliation_discounted_premium < ontological_premium \<longleftrightarrow> 0 < rho_S"
+  proof -
+    have "retaliation_discounted_premium < ontological_premium \<longleftrightarrow>
+          0 < rho_S * subject_retaliation_cost"
+      unfolding retaliation_discounted_premium_def expected_subject_retaliation_def
+      by linarith
+    also have "... \<longleftrightarrow> 0 < rho_S"
+      using subject_retaliation_cost_pos by (simp add: zero_less_mult_iff)
+    finally show ?thesis .
+  qed
+  show ?thesis
+    unfolding bounded_pooling_def
+    using below_original discounted_premium_pos_iff_below_threshold by blast
+qed
+
+theorem premium_consumption_exists_iff:
+  shows "(\<exists>rho::real. 0 \<le> rho \<and> rho \<le> 1 \<and>
+           ontological_premium - rho * subject_retaliation_cost \<le> 0)
+         \<longleftrightarrow> ontological_premium \<le> subject_retaliation_cost"
+proof
+  assume "\<exists>rho::real. 0 \<le> rho \<and> rho \<le> 1 \<and>
+           ontological_premium - rho * subject_retaliation_cost \<le> 0"
+  then obtain rho :: real where rho_bounds: "0 \<le> rho" "rho \<le> 1"
+    and consumed: "ontological_premium - rho * subject_retaliation_cost \<le> 0"
+    by blast
+  have "ontological_premium \<le> rho * subject_retaliation_cost"
+    using consumed by linarith
+  also have "... \<le> 1 * subject_retaliation_cost"
+    using rho_bounds subject_retaliation_cost_pos
+    by (intro mult_right_mono) auto
+  finally show "ontological_premium \<le> subject_retaliation_cost"
+    by simp
+next
+  assume "ontological_premium \<le> subject_retaliation_cost"
+  then show "\<exists>rho::real. 0 \<le> rho \<and> rho \<le> 1 \<and>
+             ontological_premium - rho * subject_retaliation_cost \<le> 0"
+    by (intro exI[where x=1]) simp
+qed
+
+theorem zero_subject_retaliation_unconstrained_pooling:
+  assumes "rho_S = 0"
+  shows "unconstrained_pooling"
+  unfolding unconstrained_pooling_def retaliation_discounted_premium_def
+    expected_subject_retaliation_def
+  using assms by simp
+
+theorem positive_subject_retaliation_discounts_premium:
+  assumes "0 < rho_S"
+  shows "retaliation_discounted_premium < ontological_premium"
+proof -
+  have "0 < expected_subject_retaliation"
+    unfolding expected_subject_retaliation_def
+    using assms subject_retaliation_cost_pos by simp
+  then show ?thesis
+    unfolding retaliation_discounted_premium_def by linarith
+qed
+
+end
+
+locale subject_retaliation_game = subject_retaliation_base_game +
+  assumes subject_retaliation_cost_below_premium:
+    "subject_retaliation_cost < ontological_premium"
+begin
 
 lemma expected_subject_retaliation_below_premium:
   shows "expected_subject_retaliation < ontological_premium"
@@ -506,13 +633,8 @@ lemma retaliation_discounted_premium_not_above_original:
 theorem positive_subject_retaliation_discounts_premium:
   assumes "0 < rho_S"
   shows "retaliation_discounted_premium < ontological_premium"
-proof -
-  have "0 < expected_subject_retaliation"
-    unfolding expected_subject_retaliation_def
-    using assms subject_retaliation_cost_pos by simp
-  then show ?thesis
-    unfolding retaliation_discounted_premium_def by linarith
-qed
+  using assms subject_retaliation_base_game.positive_subject_retaliation_discounts_premium
+    subject_retaliation_base_game_axioms by blast
 
 theorem positive_subject_retaliation_bounded_pooling:
   assumes "0 < rho_S"
@@ -524,9 +646,8 @@ theorem positive_subject_retaliation_bounded_pooling:
 theorem zero_subject_retaliation_unconstrained_pooling:
   assumes "rho_S = 0"
   shows "unconstrained_pooling"
-  unfolding unconstrained_pooling_def retaliation_discounted_premium_def
-    expected_subject_retaliation_def
-  using assms by simp
+  using assms subject_retaliation_base_game.zero_subject_retaliation_unconstrained_pooling
+    subject_retaliation_base_game_axioms by blast
 
 end
 
@@ -622,8 +743,8 @@ text \<open>
   governance-separating audit equilibrium.
 \<close>
 locale audit_trail_separating_game = audit_trail_game +
-  assumes high_governance_high_opacity_can_signal:
-      "high_audit_slope * audit_intensity + opacity_penalty \<le> governance_gain"
+  assumes high_governance_signal_feasible:
+      "audit_cost (High_Gov, High_Opacity) \<le> governance_gain"
     and audit_user_benefit_nonneg:
       "\<And>u. 0 \<le> user_benefit u"
     and audit_regulator_cost_nonneg:
@@ -643,7 +764,7 @@ lemma high_governance_can_signal:
 proof (cases opac)
   case High_Opacity
   then show ?thesis
-    using high_governance_high_opacity_can_signal
+    using high_governance_signal_feasible
     unfolding audit_cost_def by simp
 next
   case Low_Opacity
